@@ -1,0 +1,1775 @@
+{
+  "info": {
+    "_postman_id": "db84033f-74b8-42ba-862d-bebba1e6c87b",
+    "name": "Trello API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52307578"
+  },
+  "item": [
+    {
+      "name": "Boards",
+      "item": [
+        {
+          "name": "Create Board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response body as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Save board ID to environment variable for future use\r",
+                  "pm.environment.set(\"board_id\", responseBody.id);\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check board ID is present in response body\r",
+                  "pm.test(\"Board ID is present\", () => {\r",
+                  "    pm.expect(responseBody.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "// Check board name is correct in response body\r",
+                  "pm.test(\"Board name is correct\", () => {\r",
+                  "    pm.expect(responseBody.name).to.eql(\"Trello_API_Board\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check board is not closed\r",
+                  "pm.test(\"Board is not closed\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.false;\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is below 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/boards/?name=Trello_API_Board&key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "boards",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Trello_API_Board"
+                },
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response body as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check Board ID matches saved environment variable\r",
+                  "pm.test(\"Board ID is correct\", () => {\r",
+                  "    pm.expect(responseBody.id).to.eql(pm.environment.get(\"board_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check Board is not closed\r",
+                  "pm.test(\"Board is not closed\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.false;\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "     "
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/boards/{{board_id}}?key={{api_key}}&token={{token}}&",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "boards",
+                "{{board_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check board name is updated\r",
+                  "pm.test(\"Board name is updated\", () => {\r",
+                  "    pm.expect(responseBody.name).to.eql(\"Trello_API_Board_Updated\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check board ID has not changed\r",
+                  "pm.test(\"Board ID has not changed\", () => {\r",
+                  "    pm.expect(responseBody.id).to.eql(pm.environment.get(\"board_id\"));  \r",
+                  "});\r",
+                  "\r",
+                  "// Check board description is updated\r",
+                  "pm.test(\"Board description is updated\", () => {\r",
+                  "    pm.expect(responseBody.desc).to.eql(\"Updated board\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check background colour is updated\r",
+                  "pm.test(\"Background colour is updated\", () => {\r",
+                  "    pm.expect(responseBody.prefs.background).to.eql(\"pink\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check board is not closed\r",
+                  "pm.test(\"Board is not closed\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.false;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/boards/{{board_id}}?key={{api_key}}&token={{token}}&name=Trello_API_Board_Updated&desc=Updated board&prefs/background=pink",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "boards",
+                "{{board_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "name",
+                  "value": "Trello_API_Board_Updated"
+                },
+                {
+                  "key": "desc",
+                  "value": "Updated board"
+                },
+                {
+                  "key": "prefs/background",
+                  "value": "pink"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create List on a Board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Save List ID as environment variable for future use\r",
+                  "pm.environment.set(\"list_id\", responseBody.id);\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check list ID is present in response body\r",
+                  "pm.test(\"List ID is present\", () => {\r",
+                  "    pm.expect(responseBody.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "// Check list name is correct in response body\r",
+                  "pm.test(\"List name is correct\", () => {\r",
+                  "    pm.expect(responseBody.name).to.eql(\"Test List\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check list is not closed\r",
+                  "pm.test(\"List is not closed\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.false;\r",
+                  "});\r",
+                  "\r",
+                  "// Check list is on the correct board\r",
+                  "pm.test(\"List is on the correct board\", () => {\r",
+                  "    pm.expect(responseBody.idBoard).to.eql(pm.environment.get(\"board_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Request time is below 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/boards/{{board_id}}/lists?name=Test List&key={{api_key}}&token={{token}}&",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "boards",
+                "{{board_id}}",
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Test List"
+                },
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lists on a Board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check response is an array\r",
+                  "pm.test(\"Response is an array\", () => {\r",
+                  "    pm.expect(responseBody).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check array is not empty\r",
+                  "pm.test(\"Response contains lists\", () => {\r",
+                  "    pm.expect(responseBody.length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "// Check each list belongs to the correct board\r",
+                  "pm.test(\"All lists belong to the correct board\", () => {\r",
+                  "    responseBody.forEach((list) => {\r",
+                  "        pm.expect(list.idBoard).to.eql(pm.environment.get(\"board_id\"));\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "// Check each list has an ID\r",
+                  "pm.test(\"All lists have an ID\", () => {\r",
+                  "    responseBody.forEach((list) => {\r",
+                  "        pm.expect(list.id).to.exist;\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is below 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/boards/{{board_id}}/lists?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "boards",
+                "{{board_id}}",
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lists",
+      "item": [
+        {
+          "name": "Create new List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Save list ID to environment variable for future requests \r",
+                  "pm.environment.set(\"list_id\", responseBody.id);\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check list ID is present in response body\r",
+                  "pm.test(\"List ID is present\", () => {\r",
+                  "    pm.expect(responseBody.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "// Check list name is correct in response body\r",
+                  "pm.test(\"List name is correct\", () => {\r",
+                  "    pm.expect(responseBody.name).to.eql(\"Test List\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check list is not closed\r",
+                  "pm.test(\"List is not closed\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.false;\r",
+                  "});\r",
+                  "\r",
+                  "// Check list is on the correct board\r",
+                  "pm.test(\"List is on the correct board\", () => {\r",
+                  "    pm.expect(responseBody.idBoard).to.eql(pm.environment.get(\"board_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Request time is below 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lists?name=Test List&idBoard={{board_id}}&key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Test List"
+                },
+                {
+                  "key": "idBoard",
+                  "value": "{{board_id}}"
+                },
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response body as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check list ID matches saved environment variable\r",
+                  "pm.test(\"List ID is correct\", () => {\r",
+                  "    pm.expect(responseBody.id).to.eql(pm.environment.get(\"list_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check list is not closed\r",
+                  "pm.test(\"List is not closed\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.false;\r",
+                  "});\r",
+                  "\r",
+                  "// Check list is on the correct board\r",
+                  "pm.test(\"List is on the correct board\", () => {\r",
+                  "    pm.expect(responseBody.idBoard).to.eql(pm.environment.get(\"board_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check list name is updated\r",
+                  "pm.test(\"List name is updated\", () => {\r",
+                  "    pm.expect(responseBody.name).to.eql(\"Test List Updated\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check list ID has not changed\r",
+                  "pm.test(\"List ID has not changed\", () => {\r",
+                  "    pm.expect(responseBody.id).to.eql(pm.environment.get(\"list_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}?key={{api_key}}&token={{token}}&name=Test List Updated",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "name",
+                  "value": "Test List Updated"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Archive list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check list is archived\r",
+                  "pm.test(\"List is archived\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.true;\r",
+                  "});\r",
+                  "\r",
+                  "// Check list ID has not changed\r",
+                  "pm.test(\"List ID has not changed\", () => {\r",
+                  "    pm.expect(responseBody.id).to.eql(pm.environment.get(\"list_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}/closed?key={{api_key}}&token={{token}}&value=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_id}}",
+                "closed"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "value",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cards",
+      "item": [
+        {
+          "name": "Create new Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Save card ID as environment variable for future use\r",
+                  "pm.environment.set(\"card_id\", responseBody.id);\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check card ID is present in response body\r",
+                  "pm.test(\"Card ID is present\", () => {\r",
+                  "    pm.expect(responseBody.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "// Check card name is correct in response body\r",
+                  "pm.test(\"Card name is correct\", () => {\r",
+                  "    pm.expect(responseBody.name).to.eql(\"Test Card\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check card is on the correct list\r",
+                  "pm.test(\"Card is on the correct list\", () => {\r",
+                  "    pm.expect(responseBody.idList).to.eql(pm.environment.get(\"list_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check card is on the correct board\r",
+                  "pm.test(\"Card is on the correct board\", () => {\r",
+                  "    pm.expect(responseBody.idBoard).to.eql(pm.environment.get(\"board_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check card is not closed\r",
+                  "pm.test(\"Card is not closed\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.false;\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cards?idList={{list_id}}&key={{api_key}}&token={{token}}&name=Test Card",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "idList",
+                  "value": "{{list_id}}"
+                },
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "name",
+                  "value": "Test Card"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response body as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check card ID matches saved environment variable\r",
+                  "pm.test(\"Card ID is correct\", () => {\r",
+                  "    pm.expect(responseBody.id).to.eql(pm.environment.get(\"card_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check card is not closed\r",
+                  "pm.test(\"Card is not closed\", () => {\r",
+                  "    pm.expect(responseBody.closed).to.be.false;\r",
+                  "});\r",
+                  "\r",
+                  "// Check card is on the correct board\r",
+                  "pm.test(\"Card is on the correct board\", () => {\r",
+                  "    pm.expect(responseBody.idBoard).to.eql(pm.environment.get(\"board_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check card is on the correct list\r",
+                  "pm.test(\"Card is on the correct list\", () => {\r",
+                  "    pm.expect(responseBody.idList).to.eql(pm.environment.get(\"list_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cards/{{card_id}}?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check card name is updated\r",
+                  "pm.test(\"Card name is updated\", () => {\r",
+                  "    pm.expect(responseBody.name).to.eql(\"Test Card Updated\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check card description is updated\r",
+                  "pm.test(\"Card description is updated\", () => {\r",
+                  "    pm.expect(responseBody.desc).to.eql(\"This card has been updated\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check card ID has not changed\r",
+                  "pm.test(\"Card ID has not changed\", () => {\r",
+                  "    pm.expect(responseBody.id).to.eql(pm.environment.get(\"card_id\"));\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards/{{card_id}}?key={{api_key}}&token={{token}}&name=Test Card Updated&desc=This card has been updated",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "name",
+                  "value": "Test Card Updated"
+                },
+                {
+                  "key": "desc",
+                  "value": "This card has been updated"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check response confirms deletion\r",
+                  "pm.test(\"Response confirms deletion\", () => {\r",
+                  "    pm.expect(responseBody).to.eql({ \"limits\": {} });\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "// Unset card ID after deletion\r",
+                  "pm.environment.unset(\"card_id\");\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards/{{card_id}}?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "Get Member",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response body as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Save member ID as environment variable for future use\r",
+                  "pm.environment.set(\"member_id\", responseBody.id);   \r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "// Check member ID is present in response body\r",
+                  "pm.test(\"Member ID is present\", () => {\r",
+                  "    pm.expect(responseBody.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "// Check username is present in response body\r",
+                  "pm.test(\"Member username is present\", () => {\r",
+                  "    pm.expect(responseBody.username).to.exist;\r",
+                  "});\r",
+                  " \r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/members/me?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "members",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Boards Member belongs to",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody = pm.response.json();\r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check response is an array\r",
+                  "pm.test(\"Response is an array\", () => {\r",
+                  "    pm.expect(responseBody).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "// Check array is not empty\r",
+                  "pm.test(\"Response contains boards\", () => {\r",
+                  "    pm.expect(responseBody.length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "// Check each board has an ID\r",
+                  "pm.test(\"All boards have an ID\", () => {\r",
+                  "    responseBody.forEach((board) => {\r",
+                  "        pm.expect(board.id).to.exist;\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/members/me/boards?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "members",
+                "me",
+                "boards"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET \\\r\n  --url 'https://api.trello.com/1/members/{id}/boards?key=APIKey&token=APIToken' \\\r\n  --header 'Accept: application/json'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Tests",
+      "item": [
+        {
+          "name": "Create Board - No Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check request returns 400\r",
+                  "pm.test(\"Status code is 400\", () => {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "// Confirm response is in the 400 range (client error)\r",
+                  "pm.test(\"Response confirms client error\", () => {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});\r",
+                  "\r",
+                  "// Check response body is not empty\r",
+                  "pm.test(\"Response body is not empty\", () => {\r",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/boards/?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "boards",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Board - Invalid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// BUG: API returns 400 instead of expected 404 for invalid board ID instead\r",
+                  "// Expected: 404 Not Found\r",
+                  "// Actual: 400 Bad Request  \r",
+                  "// Logged as TRELLO_BUG_001 in Jira\r",
+                  "pm.test(\"Status code is 400\", () => {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "// Confirm response is in the 400 range (client error)\r",
+                  "pm.test(\"Response confirms client error\", () => {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});\r",
+                  "\r",
+                  "// Check response body is not empty\r",
+                  "pm.test(\"Response body is not empty\", () => {\r",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/boards/1234?key={{api_key}}&token={{token}}&",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "boards",
+                "1234"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create List - No Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check request returns 400\r",
+                  "pm.test(\"Status code is 400\", () => {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "// Confirm response is in the 400 range (client error)\r",
+                  "pm.test(\"Response confirms client error\", () => {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "})\r",
+                  "\r",
+                  "// Check response body is not empty\r",
+                  "pm.test(\"Response body is not empty\", () => {\r",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lists?idBoard={{board_id}}&key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "idBoard",
+                  "value": "{{board_id}}"
+                },
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create List - Invalid Board ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check request returns 400\r",
+                  "pm.test(\"Status code is 400\", () => {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "// Confirm response is in the 400 range (client error)\r",
+                  "pm.test(\"Response confirms client error\", () => {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "})\r",
+                  "\r",
+                  "// Check response body is not empty\r",
+                  "pm.test(\"Response body is not empty\", () => {\r",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lists?name=Test List&idBoard=invalidID123&key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lists"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Test List"
+                },
+                {
+                  "key": "idBoard",
+                  "value": "invalidID123"
+                },
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Card - Invalid List ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check request returns 400\r",
+                  "pm.test(\"Status code is 400\", () => {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "// Confirm response is in the 400 range (client error)\r",
+                  "pm.test(\"Response confirms client error\", () => {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "})\r",
+                  "\r",
+                  "// Check response body is not empty\r",
+                  "pm.test(\"Response body is not empty\", () => {\r",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards?idList=invalidListID123&key={{api_key}}&token={{token}}&name=Test Card",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cards"
+              ],
+              "query": [
+                {
+                  "key": "idList",
+                  "value": "invalidListID123"
+                },
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "name",
+                  "value": "Test Card"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Member - Invalid ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check request returns 404\r",
+                  "pm.test(\"Status code is 404\", () => {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "// Confirm response is in the 400 range (client error)\r",
+                  "pm.test(\"Response confirms client error\", () => {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "})\r",
+                  "\r",
+                  "// Check response body is not empty\r",
+                  "pm.test(\"Response body is not empty\", () => {\r",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/members/1234?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "members",
+                "1234"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get List - Invalid API key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check request returns 401\r",
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);    \r",
+                  "});\r",
+                  "\r",
+                  "// Confirm response is in the 400 range (client error)\r",
+                  "pm.test(\"Response confirms client error\", () => {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "})\r",
+                  "\r",
+                  "// Check response body is not empty\r",
+                  "pm.test(\"Response body is not empty\", () => {\r",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}?key=invalidkey123&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lists",
+                "{{list_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "invalidkey123"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Card - Invalid token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check request returns 401\r",
+                  "pm.test(\"Status code is 401\", () => {\r",
+                  "    pm.response.to.have.status(401);    \r",
+                  "});\r",
+                  "\r",
+                  "// Confirm response is in the 400 range (client error)\r",
+                  "pm.test(\"Response confirms client error\", () => {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});\r",
+                  "\r",
+                  "// Check response body is not empty\r",
+                  "pm.test(\"Response body is not empty\", () => {\r",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;  \r",
+                  "});\r",
+                  "\r",
+                  "// Check response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cards/{{card_id}}?key={{api_key}}&token=invalidtoken123&name=Test Card Updated&desc=This card has been updated",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cards",
+                "{{card_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "invalidtoken123"
+                },
+                {
+                  "key": "name",
+                  "value": "Test Card Updated"
+                },
+                {
+                  "key": "desc",
+                  "value": "This card has been updated"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "item": [
+        {
+          "name": "Delete board",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Pass response as JSON\r",
+                  "var responseBody= pm.response.json();   \r",
+                  "\r",
+                  "// Check request was successful\r",
+                  "pm.test(\"Status code is 200\",  () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Check response confirms deletion\r",
+                  "pm.test(\"Response confirms deletion\", () => {\r",
+                  "    pm.expect(responseBody._value).to.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "// Check response time \r",
+                  "pm.test(\"Response time is less than 2000ms\", () => {   \r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "// Unset board ID after deletion\r",
+                  "pm.environment.unset(\"board_id\");\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/boards/{{board_id}}?key={{api_key}}&token={{token}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "boards",
+                "{{board_id}}"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "{{api_key}}"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl --request DELETE \\\r\n  --url 'https://api.trello.com/1/boards/{id}?key=APIKey&token=APIToken'"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
